@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Feedback";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Leave Your Feedback</h2>
+
+    <form method="post" asp-controller="Feedback" asp-action="Index">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-sm-10">
+                <!-- Star Rating -->
+                <div class="mb-3 text-center">
+                    <label class="form-label">Rate your experience:</label>
+                    <div class="star-rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <span class="star" data-value="@i">&#9733;</span>
+                        }
+                        <input type="hidden" id="Rating" name="Rating" value="0" />
+                    </div>
+                </div>
+
+                <!-- Note -->
+                <div class="mb-3">
+                    <textarea name="Note" class="form-control" rows="3"
+                              placeholder="Any suggestions or improvements?"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+
+                <!-- Success Message -->
+                @if (ViewBag.Message != null)
+                {
+                    <p class="mt-3 text-success text-center">@ViewBag.Message</p>
+                }
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Responsive Star Styling -->
+<style>
+    .star-rating {
+        font-size: 2rem;
+        display: inline-block;
+    }
+
+        .star-rating .star {
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+            .star-rating .star.selected {
+                color: orange;
+            }
+
+    @@media (max-width: 576px) {
+        .star-rating
+
+    {
+        font-size: 1.5rem;
+    }
+
+    }
+</style>
+
+<!-- Star Rating Script -->
+<script>
+    const stars = document.querySelectorAll('.star-rating .star');
+    const ratingInput = document.getElementById('Rating');
+
+    stars.forEach(star => {
+        star.addEventListener('mouseover', () => {
+            const val = parseInt(star.getAttribute('data-value'));
+            highlightStars(val);
+        });
+
+        star.addEventListener('mouseout', () => {
+            highlightStars(parseInt(ratingInput.value));
+        });
+
+        star.addEventListener('click', () => {
+            const val = parseInt(star.getAttribute('data-value'));
+            ratingInput.value = val;
+            highlightStars(val);
+        });
+    });
+
+    function highlightStars(rating) {
+        stars.forEach(star => {
+            const val = parseInt(star.getAttribute('data-value'));
+            star.classList.toggle('selected', val <= rating);
+        });
+    }
+</script>
